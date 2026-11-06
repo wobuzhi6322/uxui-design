@@ -1,5 +1,4 @@
 /* uxuidesign v2 — drop-in tokens + base components.
-   Values: @UXUIDesign (Madia) defaults; overseas additions noted inline.
    Override brand colors and font stack per project; keep the ratios. */
 
 :root {
@@ -7,17 +6,17 @@
   --font-sans: "Pretendard Variable", Pretendard, Inter, -apple-system, system-ui, "Segoe UI", sans-serif;
   --fs-12: .75rem; --fs-14: .875rem; --fs-16: 1rem; --fs-18: 1.125rem; --fs-20: 1.25rem;
   --fs-24: 1.5rem; --fs-28: 1.75rem; --fs-32: 2rem; --fs-40: 2.5rem; --fs-48: 3rem;
-  --lh-tight: 1.2; --lh-title: 1.3; --lh-body: 1.4; --lh-read: 1.5;      /* 1.5 for long-form (DesignCourse/Jesse) */
+  --lh-tight: 1.2; --lh-title: 1.3; --lh-body: 1.4; --lh-read: 1.5;      /* 1.5 for long-form */
   --ls-body: -0.025em; --ls-title: -0.02em; --ls-caps: .06em;
   --fw-regular: 400; --fw-medium: 500; --fw-semibold: 600;
 
-  /* neutrals: Madia's 4 text grays inside a 10-step ramp (Mizko: 10 grays) */
+  /* neutrals: 4 text grays inside a 10-step ramp */
   --gray-50: #F7F7F8; --gray-100: #F0F0F2; --gray-200: #E5E5E5; --gray-300: #DBDBDB; --gray-400: #BDBDBD;
   --gray-500: #999999; --gray-600: #767676; --gray-700: #505050; --gray-800: #2B2B2B; --gray-900: #111111;
   --text-1: var(--gray-900); --text-2: var(--gray-700); --text-3: var(--gray-600); --text-disabled: var(--gray-500);
   --bg: #FFFFFF; --bg-soft: var(--gray-50); --line: var(--gray-200); --line-strong: var(--gray-300);
 
-  /* brand + semantic (5 steps max per role — Mizko); replace with project colors */
+  /* brand + semantic (5 steps max per role); replace with project colors */
   --brand-50: #EEF3FD; --brand-100: #D6E2FA; --brand-500: #2B5BD7; --brand-600: #1E46B0; --brand-700: #173684;
   --brand: var(--brand-500); --brand-ink: var(--brand-600);
   --accent: #FF6B2C;                       /* appears once per view */
@@ -34,7 +33,7 @@
   --page-x: clamp(16px, 4vw, 24px);        /* 16 / 20 / 24 mobile side margin */
   --container: 1200px; --measure: 600px; --gnb-h: 72px; --control-h: 48px;
 
-  /* motion (Figma Motion: sub-second; 500ms+ feels slow) */
+  /* motion: sub-second; 500ms+ feels slow */
   --dur-fast: 150ms; --dur-base: 250ms; --dur-slow: 400ms;
   --ease-out: cubic-bezier(.2, .8, .2, 1); --ease-in-out: cubic-bezier(.4, 0, .2, 1);
 }

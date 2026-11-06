@@ -1,57 +1,56 @@
 # Visual hierarchy and gaze path
 
-Tags: `[M]` @UXUIDesign (priority) · `[DC]` DesignCourse · `[MZ]` Mizko · `[JS]` Jesse Showalter · `[CM]` CharliMarieTV · `[FX]` Flux Academy.
-"The most important thing in this kind of design is information hierarchy" `[M]`. "If everything is important, nothing is" `[JS]`.
+"The most important thing in this kind of design is information hierarchy". "If everything is important, nothing is".
 
 ## 1. Decide before styling
-1. Name the single most important information or action on the screen `[M]`.
-2. Order the rest as the user will look: e.g. product → options → total price; chart/KPI before its explanation; login = information only, no decoration `[M]`.
-3. Assign three levels: **1 = main title, 2 = sub/section title, 3 = body**; keep the same three everywhere `[M]`. Neighboring texts with different roles must look different; identical styling for label + value + link is the classic failure `[DC][JS]`.
-4. "Shrink what should shrink, enlarge what should pop" — decisively. Refinement comes from bold contrast, not from adding force everywhere `[M]`.
+1. Name the single most important information or action on the screen.
+2. Order the rest as the user will look: e.g. product → options → total price; chart/KPI before its explanation; login = information only, no decoration.
+3. Assign three levels: **1 = main title, 2 = sub/section title, 3 = body**; keep the same three everywhere. Neighboring texts with different roles must look different; identical styling for label + value + link is the classic failure.
+4. "Shrink what should shrink, enlarge what should pop" — decisively. Refinement comes from bold contrast, not from adding force everywhere.
 
 ## 2. Tools, in order of power
 | Order | Tool | Notes |
 |---|---|---|
-| 1 | **Size / scale** | biggest lever for hierarchy `[M][DC]`; titles up, meta down |
-| 2 | **Tone** (color/opacity) | 100 → 70 → 50 black; #111 / #505050 / #767676 `[M]` |
-| 3 | **Weight** | one step (500 → 600); not bold everywhere `[M]` |
-| 4 | Space | more whitespace around the primary element `[M][JS]` |
-| 5 | Accent color | once, on the primary action `[M][JS]` |
-| 6 | Underline / background / icon | secondary cues used overseas (`[DC]`); apply only after 1–3 |
+| 1 | **Size / scale** | biggest lever for hierarchy; titles up, meta down |
+| 2 | **Tone** (color/opacity) | 100 → 70 → 50 black; #111 / #505050 / #767676 |
+| 3 | **Weight** | one step (500 → 600); not bold everywhere |
+| 4 | Space | more whitespace around the primary element |
+| 5 | Accent color | once, on the primary action |
+| 6 | Underline / background / icon | secondary cues; apply only after 1–3 |
 
-Typography wrong hurts more than scale wrong — fix type first, then scale `[DC]`.
+Typography wrong hurts more than scale wrong — fix type first, then scale.
 
-## 3. What to shrink, what to grow `[M]`
+## 3. What to shrink, what to grow
 - Shrink: avatars, logos, thumbnails and decorative images that outweigh the information; rarely used functions (address change); counts/status chips all set at the same size.
 - Grow: the final payable amount (bigger than its components; the calculation "from what, minus what, equals what" must be readable); the plan the user should move to (not the current one); the primary CTA.
-- Price/number blocks: large and thin `[M]`.
-- Group the total with the discount it depends on; separated numbers lose meaning `[M]`.
-- Most-used action in a list of actions gets the prominent treatment `[JS]`.
+- Price/number blocks: large and thin.
+- Group the total with the discount it depends on; separated numbers lose meaning.
+- Most-used action in a list of actions gets the prominent treatment.
 
 ## 4. Buttons and actions
-- Button hierarchy by fill: primary = filled brand; secondary = outline/gray; tertiary = text. "Forward dark, back light" `[M]`.
-- One primary per view; two equal-weight CTAs force a decision. "Register" next to "Sign in" becomes a text link ("Don't have an account? Register") `[JS]`.
-- The most important CTA sits first/left (LTR) and is the solid one `[DC]`. Order by what users want first (work before contact) `[DC]`.
-- Multiple heavy black buttons collide → weaken the secondary `[M]`.
-- Links must look different from labels and placeholders (underline, color, weight) `[JS]`.
+- Button hierarchy by fill: primary = filled brand; secondary = outline/gray; tertiary = text. "Forward dark, back light".
+- One primary per view; two equal-weight CTAs force a decision. "Register" next to "Sign in" becomes a text link ("Don't have an account? Register").
+- The most important CTA sits first/left (LTR) and is the solid one. Order by what users want first (work before contact).
+- Multiple heavy black buttons collide → weaken the secondary.
+- Links must look different from labels and placeholders (underline, color, weight).
 
-## 5. Subtraction (what Madia removes first)
-- Lines between items, boxes inside boxes, background fills, extra strokes, gradients, glass, heavy shadows, drop shadows on text, chips that could be text, extra weights, extra colors `[M][DC]`.
-- "Seeing a lot at once is not readability" `[M]`; people scan, they don't read — fewer words, shorter headlines `[JS]`.
-- A label whose meaning is obvious from content can become a watermark or disappear `[DC]`.
-- Decorative elements are watermarks: low contrast, never competing with content `[DC]`.
+## 5. Subtraction (remove these first)
+- Lines between items, boxes inside boxes, background fills, extra strokes, gradients, glass, heavy shadows, drop shadows on text, chips that could be text, extra weights, extra colors.
+- "Seeing a lot at once is not readability"; people scan, they don't read — fewer words, shorter headlines.
+- A label whose meaning is obvious from content can become a watermark or disappear.
+- Decorative elements are watermarks: low contrast, never competing with content.
 
 ## 6. Gaze path and placement
-- Tabs and primary actions in conventional positions; "the eye goes here first, so…" `[M]`. Logo left, nav right 9/10 `[DC]`.
-- On image overlaps, place text away from the subject so both image and text read `[M]`.
-- Hero: headline unmistakably larger than sub-headline; nav smaller than headline `[DC]`. Reduce oversized hero banners to expose real content above the fold `[MZ]`.
-- Portfolio/landing: the work/product visible within seconds; intros, banners and motion must not steal hierarchy `[MZ][FX][M]`.
-- Bottom tab bars: most important items first and last (serial position), within thumb reach `[JS]`.
+- Tabs and primary actions in conventional positions; "the eye goes here first, so…". Logo left, nav right 9/10.
+- On image overlaps, place text away from the subject so both image and text read.
+- Hero: headline unmistakably larger than sub-headline; nav smaller than headline. Reduce oversized hero banners to expose real content above the fold.
+- Portfolio/landing: the work/product visible within seconds; intros, banners and motion must not steal hierarchy.
+- Bottom tab bars: most important items first and last (serial position), within thumb reach.
 
 ## 7. Tests
-- **5-second test**: show the screen for 5s → can someone say what it is for and what to do? `[DC]`
-- **Squint test / grayscale**: blur or desaturate — the primary element must still dominate `[CM][JS]`.
-- **Read it back**: can you read every text at 100% zoom? Too small/too big titles are red flags `[CM]`.
+- **5-second test**: show the screen for 5s → can someone say what it is for and what to do?
+- **Squint test / grayscale**: blur or desaturate — the primary element must still dominate.
+- **Read it back**: can you read every text at 100% zoom? Too small/too big titles are red flags.
 
 ## CSS pattern: three-level hierarchy on a card
 ```css
@@ -73,7 +72,7 @@ Typography wrong hurts more than scale wrong — fix type first, then scale `[DC
 | One filled CTA, rest outline/text | Three black buttons in a row |
 | Remove lines and inner boxes | Add a border to "separate" things |
 
-## Review template (Madia voice)
+## Review template
 - "What's #1 here? The total. Make it 28 light; the rest 14 #505050."
 - "Avatar is bigger than the content → 40px."
 - "Don't separate with color, separate with hierarchy: shrink these, enlarge that."

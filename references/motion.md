@@ -1,17 +1,16 @@
 # Motion and micro-interactions
 
-Tags: `[M]` @UXUIDesign (priority) · `[DC]` DesignCourse · `[MZ]` Mizko · `[JS]` Jesse Showalter · `[FG]` Figma (Motion/Edu) · `[UXDI]` UX Design Institute · `[FX]` Flux Academy.
-"Key buttons give immediate visual feedback; screens get simpler and buttons fade back" `[M]`. "There is room for some movement in every project — some more, some less" `[DC]`.
+"Key buttons give immediate visual feedback; screens get simpler and buttons fade back". "There is room for some movement in every project — some more, some less".
 
 ## 1. Purpose first
-- Motion exists for feedback (pressed, loading, success), orientation (where did it go), and hierarchy (reveal the primary first) `[M][JS]`.
-- Hover effects on PC are expected; a card that lifts on hover beats a card that is always floating `[M]`.
-- Moving visuals must never steal attention from content: fast-moving portfolio pieces make work unreadable `[FX]`; auto-rotating carousels hide primary content `[MZ]`.
-- Add delight only after the basics work `[JS]`.
+- Motion exists for feedback (pressed, loading, success), orientation (where did it go), and hierarchy (reveal the primary first).
+- Hover effects on PC are expected; a card that lifts on hover beats a card that is always floating.
+- Moving visuals must never steal attention from content: fast-moving portfolio pieces make work unreadable; auto-rotating carousels hide primary content.
+- Add delight only after the basics work.
 
 ## 2. Durations and easing
-- UI runs sub-second: ~250ms feels quick, 400ms is a comfortable reveal, 500ms+ starts to feel sluggish `[FG]`. Hover transitions in practice 200–500ms `[DC]`.
-- Never linear for UI; use ease-out or a `cubic-bezier` curve `[DC]`. Stagger lists by 100–200ms per item `[DC]`.
+- UI runs sub-second: ~250ms feels quick, 400ms is a comfortable reveal, 500ms+ starts to feel sluggish. Hover transitions in practice 200–500ms.
+- Never linear for UI; use ease-out or a `cubic-bezier` curve. Stagger lists by 100–200ms per item.
 - Larger or longer moves get the longer end; color/opacity changes get the short end.
 
 ```css
@@ -22,11 +21,11 @@ Tags: `[M]` @UXUIDesign (priority) · `[DC]` DesignCourse · `[MZ]` Mizko · `[J
 ```
 
 ## 3. Enter / exit patterns
-- Every animated element needs a defined start and end state. Keep it in the DOM at `opacity:0` (and `visibility:hidden`), don't remove it, or it cannot animate back `[MZ]`.
-- Mask reveal: parent `overflow:hidden`, child `translateY(100%) → 0`, ~1s with cubic-bezier for hero text (DesignCourse used 1.7s on a headline) `[DC]`. Stagger headline → sub-headline → CTA with small delays `[DC]`.
-- Toast ≠ alert `[M]`; skill default timing: fade/slide in 250ms, hold ~2.5s, fade out 200ms.
-- Dropdown/menu: chevron rotates on open, hover-driven with eased transitions `[DC]`; skill default: fade + 4–8px translate, 200ms.
-- Loading: spinner or skeleton instead of a blank flash `[JS]`.
+- Every animated element needs a defined start and end state. Keep it in the DOM at `opacity:0` (and `visibility:hidden`), don't remove it, or it cannot animate back.
+- Mask reveal: parent `overflow:hidden`, child `translateY(100%) → 0`, ~1s with cubic-bezier for hero text (up to about 1.7s on a headline). Stagger headline → sub-headline → CTA with small delays.
+- Toast ≠ alert; timing: fade/slide in 250ms, hold ~2.5s, fade out 200ms.
+- Dropdown/menu: chevron rotates on open, hover-driven with eased transitions. Use a fade + 4–8px translate, 200ms.
+- Loading: spinner or skeleton instead of a blank flash.
 
 ```css
 .reveal{ overflow:hidden; }
@@ -45,9 +44,9 @@ Tags: `[M]` @UXUIDesign (priority) · `[DC]` DesignCourse · `[MZ]` Mizko · `[J
 ```
 
 ## 4. Scroll and page transitions
-- Scroll-triggered reveals via `IntersectionObserver`, once per element `[DC]`; skill default: short distance (16–24px), ≤400ms.
-- Page/route transitions: short translate + fade with cubic-bezier; keep under ~500ms `[DC]`.
-- Heavy canvas/3D/GSAP effects only where they carry meaning (education, product demo); check mobile performance `[FX][DC]`.
+- Scroll-triggered reveals via `IntersectionObserver`, once per element; short distance (16–24px), ≤400ms.
+- Page/route transitions: short translate + fade with cubic-bezier; keep under ~500ms.
+- Heavy canvas/3D/GSAP effects only where they carry meaning (education, product demo); check mobile performance.
 
 ```js
 const io=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} }),{threshold:.2});
@@ -55,9 +54,9 @@ document.querySelectorAll('[data-reveal]').forEach(el=>io.observe(el));
 ```
 
 ## 5. Accessibility and performance
-- Respect `prefers-reduced-motion`: drop transforms and large movements, keep opacity fades or remove animation entirely `[FG][UXDI]`.
+- Respect `prefers-reduced-motion`: drop transforms and large movements, keep opacity fades or remove animation entirely.
 - Animate only `transform` and `opacity`; avoid animating layout properties.
-- Autoplay media and parallax need a stop/skip; motion is part of accessibility review `[UXDI]`.
+- Autoplay media and parallax need a stop/skip; motion is part of accessibility review.
 
 ```css
 @media (prefers-reduced-motion: reduce){
@@ -74,7 +73,7 @@ document.querySelectorAll('[data-reveal]').forEach(el=>io.observe(el));
 | Hover lift on cards, pressed state on buttons | Permanently floating cards, shadows that pulse |
 | Reduced-motion fallback | Mandatory intro animations |
 
-## Review template (Madia voice)
+## Review template
 - "The card is always floating → flat by default, lift on hover."
 - "Button gives no feedback → pressed state, 150ms."
 - "Carousel hides the plans → show all three statically."
