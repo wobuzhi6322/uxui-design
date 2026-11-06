@@ -4,7 +4,6 @@
  * Usage: node scripts/ui-lint.mjs <file|dir> [...more] [--warn-only] [--json]
  * Scans .css .scss .less .html .htm .vue .svelte .jsx .tsx .js .ts (inline <style>, style="" and Tailwind arbitrary values).
  * Exit 1 when any ERROR is found (unless --warn-only). No dependencies. Regex-based: treat results as leads, not proof.
- * Source tags: [M] @UXUIDesign (Madia) · [DC] DesignCourse · [MZ] Mizko · [JS] Jesse Showalter · [FG] Figma · [UXDI] UX Design Institute
  */
 import { readFileSync, statSync, readdirSync } from 'node:fs';
 import { join, extname } from 'node:path';
@@ -22,7 +21,7 @@ const walk = p => { const s = statSync(p); if (s.isDirectory()) { if (!SKIP_DIR.
 targets.forEach(walk);
 
 const findings = [];
-const report = (level, rule, file, line, msg, src) => findings.push({ level, rule, file, line, msg, src });
+const report = (level, rule, file, line, msg) => findings.push({ level, rule, file, line, msg });
 const lineOf = (text, idx) => text.slice(0, idx).split('\n').length;
 
 // ---------- helpers ----------
@@ -65,49 +64,49 @@ function lintCss(css, file, lineBase = 0) {
     const isDisabledish = /disabled|placeholder|readonly/.test(s);
 
     // T1 min font size
-    if (decls['font-size']) { const px = toPx(decls['font-size']); if (px != null && px < 12) report('error', 'T1-min-font-size', file, ln, `${sel} font-size ${decls['font-size']} < 12px — never below 12; informational body ≥ 14`, '[M]'); }
+    if (decls['font-size']) { const px = toPx(decls['font-size']); if (px != null && px < 12) report('error', 'T1-min-font-size', file, ln, `${sel} font-size ${decls['font-size']} < 12px — never below 12; informational body ≥ 14`); }
     // T2 positive tracking on paragraphs
-    if (decls['letter-spacing']) { const v = decls['letter-spacing']; const n = parseFloat(v); if (!isNaN(n) && n > 0 && !isCapsLabel) report('warn', 'T2-tracked-paragraph', file, ln, `${sel} letter-spacing ${v} — positive tracking only on small uppercase labels; use -0.025em (or 0) for text`, '[DC][M]'); }
+    if (decls['letter-spacing']) { const v = decls['letter-spacing']; const n = parseFloat(v); if (!isNaN(n) && n > 0 && !isCapsLabel) report('warn', 'T2-tracked-paragraph', file, ln, `${sel} letter-spacing ${v} — positive tracking only on small uppercase labels; use -0.025em (or 0) for text`); }
     // T3 tight line-height on text
-    if (decls['line-height'] && isTextish) { const v = decls['line-height']; const n = parseFloat(v); if (!isNaN(n) && !/px|rem|em|%/.test(v) && n < 1.2 && n !== 1) report('warn', 'T3-line-height', file, ln, `${sel} line-height ${v} — body 1.4 (long text 1.5), titles 1.2–1.3`, '[M]'); }
+    if (decls['line-height'] && isTextish) { const v = decls['line-height']; const n = parseFloat(v); if (!isNaN(n) && !/px|rem|em|%/.test(v) && n < 1.2 && n !== 1) report('warn', 'T3-line-height', file, ln, `${sel} line-height ${v} — body 1.4 (long text 1.5), titles 1.2–1.3`); }
     // T4 justify
-    if (/justify/.test(decls['text-align'] || '')) report('warn', 'T4-justify', file, ln, `${sel} text-align: justify — causes rivers; left-align`, '[JS][M]');
+    if (/justify/.test(decls['text-align'] || '')) report('warn', 'T4-justify', file, ln, `${sel} text-align: justify — causes rivers; left-align`);
     // T5 bold count
     if (/^(700|800|900|bold|bolder)$/.test(decls['font-weight'] || '')) boldCount++;
     // T6 families
     if (decls['font-family']) decls['font-family'].split(',').slice(0, 1).forEach(f => { const n = f.trim().replace(/["']/g, '').toLowerCase(); if (n && !n.startsWith('var(') && !/^(inherit|initial|unset|system-ui|sans-serif|serif|monospace|-apple-system)$/.test(n)) families.add(n); });
     // C1 #999 as text
-    if (decls['color'] && /#999(999)?\b|rgb\(\s*153\s*,?\s*153\s*,?\s*153/i.test(decls['color']) && !isDisabledish) report('warn', 'C1-999-text', file, ln, `${sel} color ${decls['color']} — #999 is the disabled color; use #767676 (meta) or #505050 (body)`, '[M]');
+    if (decls['color'] && /#999(999)?\b|rgb\(\s*153\s*,?\s*153\s*,?\s*153/i.test(decls['color']) && !isDisabledish) report('warn', 'C1-999-text', file, ln, `${sel} color ${decls['color']} — #999 is the disabled color; use #767676 (meta) or #505050 (body)`);
     // C2 collect hex
     if (!isTokenRoot) Object.values(decls).join(' ').match(/#[0-9a-f]{3,8}\b/gi)?.forEach(h => hexes.add(h.toLowerCase()));
     // C3 contrast when both colors present
     const bg = decls['background-color'] || (decls['background'] && !/url|gradient|var\(/.test(decls['background']) ? decls['background'].split(/\s+/)[0] : null);
-    if (decls['color'] && bg) { const fg = parseColor(decls['color']); const b = parseColor(bg); if (fg && b) { const r = contrast(fg, b); const fs = toPx(decls['font-size'] || '16px') || 16; const large = fs >= 24 || (fs >= 18.66 && /^(600|700|800|900|bold)$/.test(decls['font-weight'] || '')); const need = large ? 3 : 4.5; if (r < need) report(r < 3 ? 'error' : 'warn', 'C3-contrast', file, ln, `${sel} ${decls['color']} on ${bg} = ${r.toFixed(2)}:1 (< ${need}:1)`, '[M][DC]'); } }
+    if (decls['color'] && bg) { const fg = parseColor(decls['color']); const b = parseColor(bg); if (fg && b) { const r = contrast(fg, b); const fs = toPx(decls['font-size'] || '16px') || 16; const large = fs >= 24 || (fs >= 18.66 && /^(600|700|800|900|bold)$/.test(decls['font-weight'] || '')); const need = large ? 3 : 4.5; if (r < need) report(r < 3 ? 'error' : 'warn', 'C3-contrast', file, ln, `${sel} ${decls['color']} on ${bg} = ${r.toFixed(2)}:1 (< ${need}:1)`); } }
     // B1 0.5px borders
     const bw = Object.entries(decls).filter(([k]) => /^border|^outline/.test(k)).map(([, v]) => v).join(' ');
-    if (/(^|\s)0?\.5px\b/.test(bw)) report('error', 'B1-half-pixel-border', file, ln, `${sel} uses a 0.5px line — use 1px light (#E5E5E5)`, '[M]');
+    if (/(^|\s)0?\.5px\b/.test(bw)) report('error', 'B1-half-pixel-border', file, ln, `${sel} uses a 0.5px line — use 1px light (#E5E5E5)`);
     // B2 outline none
     if (/^(none|0)$/.test((decls['outline'] || '').trim()) || (decls['outline-width'] || '') === '0') outlineNoneAt.push({ sel, ln });
     // S1 shadow alpha
-    if (decls['box-shadow'] && decls['box-shadow'] !== 'none') { const as = shadowAlphas(decls['box-shadow']); const mx = Math.max(0, ...as); if (mx > 0.25) report('error', 'S1-heavy-shadow', file, ln, `${sel} box-shadow alpha ${mx} — cards 2–3%, never above 10%`, '[M][DC]'); else if (mx > 0.10) report('warn', 'S1-heavy-shadow', file, ln, `${sel} box-shadow alpha ${mx} — keep ≤ 10% (2–3% for cards)`, '[M][DC]'); if (!as.length && /#[0-9a-f]{3,6}\b|\b(black|gray|grey)\b/i.test(decls['box-shadow'])) report('warn', 'S1-heavy-shadow', file, ln, `${sel} box-shadow with an opaque color — use rgb(… / .03)`, '[M]'); }
+    if (decls['box-shadow'] && decls['box-shadow'] !== 'none') { const as = shadowAlphas(decls['box-shadow']); const mx = Math.max(0, ...as); if (mx > 0.25) report('error', 'S1-heavy-shadow', file, ln, `${sel} box-shadow alpha ${mx} — cards 2–3%, never above 10%`); else if (mx > 0.10) report('warn', 'S1-heavy-shadow', file, ln, `${sel} box-shadow alpha ${mx} — keep ≤ 10% (2–3% for cards)`); if (!as.length && /#[0-9a-f]{3,6}\b|\b(black|gray|grey)\b/i.test(decls['box-shadow'])) report('warn', 'S1-heavy-shadow', file, ln, `${sel} box-shadow with an opaque color — use rgb(… / .03)`); }
     // S2 text shadow
-    if (decls['text-shadow'] && decls['text-shadow'] !== 'none') report('warn', 'S2-text-shadow', file, ln, `${sel} text-shadow — no shadows on text`, '[DC]');
+    if (decls['text-shadow'] && decls['text-shadow'] !== 'none') report('warn', 'S2-text-shadow', file, ln, `${sel} text-shadow — no shadows on text`);
     // M1 slow transitions
-    for (const k of ['transition', 'transition-duration', 'animation', 'animation-duration']) { const v = decls[k]; if (!v) continue; const ms = [...v.matchAll(/([\d.]+)(ms|s)\b/g)].map(m => m[2] === 's' ? parseFloat(m[1]) * 1000 : parseFloat(m[1])); const mx = Math.max(0, ...ms); if (mx > 600 && !/@keyframes|shimmer|spin|infinite/.test(v) && !/skeleton|spinner|loader|marquee|hero|reveal/.test(s)) report('info', 'M1-slow-motion', file, ln, `${sel} ${k} ${mx}ms — UI transitions 150–400ms; 500ms+ feels sluggish`, '[FG][DC]'); }
+    for (const k of ['transition', 'transition-duration', 'animation', 'animation-duration']) { const v = decls[k]; if (!v) continue; const ms = [...v.matchAll(/([\d.]+)(ms|s)\b/g)].map(m => m[2] === 's' ? parseFloat(m[1]) * 1000 : parseFloat(m[1])); const mx = Math.max(0, ...ms); if (mx > 600 && !/@keyframes|shimmer|spin|infinite/.test(v) && !/skeleton|spinner|loader|marquee|hero|reveal/.test(s)) report('info', 'M1-slow-motion', file, ln, `${sel} ${k} ${mx}ms — UI transitions 150–400ms; 500ms+ feels sluggish`); }
     // K1 small buttons
-    if (isBtn) { btnSelectors.push(sel); if (/:hover/.test(s)) btnHover = true; if (/:focus/.test(s)) btnFocus = true; for (const k of ['min-height', 'height']) { const px = decls[k] ? toPx(decls[k]) : null; if (px != null && px < 40) report('warn', 'K1-small-button', file, ln, `${sel} ${k} ${decls[k]} — buttons 40–60px tall (44/48 common)`, '[M][JS]'); } }
+    if (isBtn) { btnSelectors.push(sel); if (/:hover/.test(s)) btnHover = true; if (/:focus/.test(s)) btnFocus = true; for (const k of ['min-height', 'height']) { const px = decls[k] ? toPx(decls[k]) : null; if (px != null && px < 40) report('warn', 'K1-small-button', file, ln, `${sel} ${k} ${decls[k]} — buttons 40–60px tall (44/48 common)`); } }
     // L1 off-scale spacing
     for (const k of ['margin', 'padding', 'gap', 'row-gap', 'column-gap', 'margin-top', 'margin-bottom', 'margin-left', 'margin-right', 'padding-top', 'padding-bottom', 'padding-left', 'padding-right', 'margin-inline', 'margin-block', 'padding-inline', 'padding-block']) {
-      const v = decls[k]; if (!v) continue; for (const m of v.matchAll(/(-?\d+(?:\.\d+)?)px/g)) { const n = Math.abs(parseFloat(m[1])); const onScale = n <= 8 ? n % 2 === 0 : n % 4 === 0; if (!onScale) { offScale++; if (offScale <= 5) report('info', 'L1-off-scale-spacing', file, ln, `${sel} ${k}: ${v} — use the 4/8 scale (2 4 6 8 · 12 16 20 24 32 40)`, '[M][MZ]'); } }
+      const v = decls[k]; if (!v) continue; for (const m of v.matchAll(/(-?\d+(?:\.\d+)?)px/g)) { const n = Math.abs(parseFloat(m[1])); const onScale = n <= 8 ? n % 2 === 0 : n % 4 === 0; if (!onScale) { offScale++; if (offScale <= 5) report('info', 'L1-off-scale-spacing', file, ln, `${sel} ${k}: ${v} — use the 4/8 scale (2 4 6 8 · 12 16 20 24 32 40)`); } }
     }
   }
-  if (outlineNoneAt.length && !hasFocusStyle) outlineNoneAt.forEach(({ sel, ln }) => report('error', 'B2-outline-none', file, ln, `${sel} outline:none with no :focus-visible style anywhere — keyboard users lose focus`, '[DC]'));
-  if (boldCount > 4) report('info', 'T5-bold-overuse', file, 0, `${boldCount} rules use 700+ weight — body 400/500, titles 600; bold is the exception`, '[M]');
-  if (families.size > 2) report('warn', 'T6-font-families', file, 0, `${families.size} font families (${[...families].join(', ')}) — one family, max two with a rule`, '[M]');
-  if (hexes.size > 16) report('info', 'C2-color-sprawl', file, 0, `${hexes.size} distinct hex colors — brand 1 + sub 1–2 + neutrals; move to tokens`, '[M][MZ]');
-  if (btnSelectors.length && !(btnHover && btnFocus)) report('info', 'K2-button-states', file, 0, `button rules found but ${!btnHover ? 'no :hover' : ''}${!btnHover && !btnFocus ? ' and ' : ''}${!btnFocus ? 'no :focus(-visible)' : ''} — define default/hover/focus/pressed/disabled/loading`, '[M][FG]');
-  if (hasMotion && !hasReduced) report('info', 'M2-reduced-motion', file, 0, `animations/transitions without a prefers-reduced-motion rule`, '[FG][UXDI]');
-  if (offScale > 5) report('info', 'L1-off-scale-spacing', file, 0, `${offScale} spacing values off the 4/8 scale in total`, '[M][MZ]');
+  if (outlineNoneAt.length && !hasFocusStyle) outlineNoneAt.forEach(({ sel, ln }) => report('error', 'B2-outline-none', file, ln, `${sel} outline:none with no :focus-visible style anywhere — keyboard users lose focus`));
+  if (boldCount > 4) report('info', 'T5-bold-overuse', file, 0, `${boldCount} rules use 700+ weight — body 400/500, titles 600; bold is the exception`);
+  if (families.size > 2) report('warn', 'T6-font-families', file, 0, `${families.size} font families (${[...families].join(', ')}) — one family, max two with a rule`);
+  if (hexes.size > 16) report('info', 'C2-color-sprawl', file, 0, `${hexes.size} distinct hex colors — brand 1 + sub 1–2 + neutrals; move to tokens`);
+  if (btnSelectors.length && !(btnHover && btnFocus)) report('info', 'K2-button-states', file, 0, `button rules found but ${!btnHover ? 'no :hover' : ''}${!btnHover && !btnFocus ? ' and ' : ''}${!btnFocus ? 'no :focus(-visible)' : ''} — define default/hover/focus/pressed/disabled/loading`);
+  if (hasMotion && !hasReduced) report('info', 'M2-reduced-motion', file, 0, `animations/transitions without a prefers-reduced-motion rule`);
+  if (offScale > 5) report('info', 'L1-off-scale-spacing', file, 0, `${offScale} spacing values off the 4/8 scale in total`);
 }
 
 function lintMarkup(src, file) {
@@ -116,22 +115,22 @@ function lintMarkup(src, file) {
   // style="" attributes → pseudo rules
   for (const m of src.matchAll(/style\s*=\s*"([^"]*)"/gi)) lintCss(`[inline]{${m[1]}}`, file, lineOf(src, m.index) - 1);
   // Tailwind arbitrary values
-  for (const m of src.matchAll(/\btext-\[(\d+(?:\.\d+)?)px\]/g)) if (parseFloat(m[1]) < 12) report('error', 'T1-min-font-size', file, lineOf(src, m.index), `Tailwind text-[${m[1]}px] — never below 12px`, '[M]');
-  for (const m of src.matchAll(/\bborder-\[0?\.5px\]/g)) report('error', 'B1-half-pixel-border', file, lineOf(src, m.index), `Tailwind border-[0.5px] — use 1px light`, '[M]');
+  for (const m of src.matchAll(/\btext-\[(\d+(?:\.\d+)?)px\]/g)) if (parseFloat(m[1]) < 12) report('error', 'T1-min-font-size', file, lineOf(src, m.index), `Tailwind text-[${m[1]}px] — never below 12px`);
+  for (const m of src.matchAll(/\bborder-\[0?\.5px\]/g)) report('error', 'B1-half-pixel-border', file, lineOf(src, m.index), `Tailwind border-[0.5px] — use 1px light`);
   // H1 img alt
-  for (const m of src.matchAll(/<img\b[^>]*>/gi)) if (!/\balt\s*=/.test(m[0])) report('warn', 'H1-img-alt', file, lineOf(src, m.index), `<img> without alt`, '[UXDI]');
+  for (const m of src.matchAll(/<img\b[^>]*>/gi)) if (!/\balt\s*=/.test(m[0])) report('warn', 'H1-img-alt', file, lineOf(src, m.index), `<img> without alt`);
   // H2 inputs without label
   const labelFor = new Set([...src.matchAll(/<label\b[^>]*\bfor\s*=\s*"([^"]+)"/gi)].map(m => m[1]));
   for (const m of src.matchAll(/<(input|select|textarea)\b[^>]*>/gi)) {
     const t = m[0]; if (/type\s*=\s*"(hidden|submit|button|reset|checkbox|radio|image)"/i.test(t)) continue;
     const id = /\bid\s*=\s*"([^"]+)"/i.exec(t)?.[1]; const labelled = (id && labelFor.has(id)) || /aria-label(ledby)?\s*=/.test(t) || /<label\b[^>]*>[^<]*$/i.test(src.slice(Math.max(0, m.index - 300), m.index));
-    if (!labelled) report('warn', 'H2-unlabeled-field', file, lineOf(src, m.index), `${m[1]} without a <label for> / aria-label — placeholder is a hint, not a label`, '[DC][JS]');
+    if (!labelled) report('warn', 'H2-unlabeled-field', file, lineOf(src, m.index), `${m[1]} without a <label for> / aria-label — placeholder is a hint, not a label`);
   }
   // H4 icon-only buttons
-  for (const m of src.matchAll(/<button\b([^>]*)>([\s\S]*?)<\/button>/gi)) { const text = m[2].replace(/<[^>]+>/g, '').trim(); if (!text && !/aria-label(ledby)?\s*=/.test(m[1])) report('warn', 'H4-icon-only-button', file, lineOf(src, m.index), `icon-only <button> without aria-label`, '[MZ][FG]'); }
+  for (const m of src.matchAll(/<button\b([^>]*)>([\s\S]*?)<\/button>/gi)) { const text = m[2].replace(/<[^>]+>/g, '').trim(); if (!text && !/aria-label(ledby)?\s*=/.test(m[1])) report('warn', 'H4-icon-only-button', file, lineOf(src, m.index), `icon-only <button> without aria-label`); }
   // H5 weak link/CTA copy
-  for (const m of src.matchAll(/>\s*(click here|learn more|submit|read more)\s*</gi)) report('info', 'H5-weak-cta-copy', file, lineOf(src, m.index), `"${m[1]}" — say the outcome ("Send message", "See my work")`, '[DC][MZ]');
-  for (const m of src.matchAll(/<h1\b[^>]*>\s*welcome to\b/gi)) report('info', 'H6-welcome-headline', file, lineOf(src, m.index), `"Welcome to …" headline — say what it is and what to do`, '[DC]');
+  for (const m of src.matchAll(/>\s*(click here|learn more|submit|read more)\s*</gi)) report('info', 'H5-weak-cta-copy', file, lineOf(src, m.index), `"${m[1]}" — say the outcome ("Send message", "See my work")`);
+  for (const m of src.matchAll(/<h1\b[^>]*>\s*welcome to\b/gi)) report('info', 'H6-welcome-headline', file, lineOf(src, m.index), `"Welcome to …" headline — say what it is and what to do`);
 }
 
 for (const f of files) {
@@ -143,7 +142,7 @@ const order = { error: 0, warn: 1, info: 2 };
 findings.sort((a, b) => order[a.level] - order[b.level] || a.file.localeCompare(b.file) || a.line - b.line);
 if (asJson) console.log(JSON.stringify({ files: files.length, findings }, null, 2));
 else {
-  for (const x of findings) console.log(`${x.level.toUpperCase().padEnd(5)} ${x.rule.padEnd(22)} ${x.file}:${x.line}  ${x.msg}  ${x.src}`);
+  for (const x of findings) console.log(`${x.level.toUpperCase().padEnd(5)} ${x.rule.padEnd(22)} ${x.file}:${x.line}  ${x.msg}`);
   const c = l => findings.filter(x => x.level === l).length;
   console.log(`\n${files.length} files · ${c('error')} errors · ${c('warn')} warnings · ${c('info')} info. Heuristics only — confirm in the browser (375/1440, Tab order, contrast).`);
 }
